@@ -1,3 +1,8 @@
+import grass from 'url:../img/grass.png';
+import icons from 'url:../img/icons.svg'
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+
 const recipeContainer = document.querySelector('.recipe');
 
 const timeout = function (s) {
@@ -12,11 +17,24 @@ const timeout = function (s) {
 
 ///////////////////////////////////////
 
+const renderSpinner = function (parentEL) {
+  const markup = `
+  <div class="spinner">
+  <svg>
+    <use href="${icons}#icon-loader"></use>
+  </svg>
+</div>
+  `
+  parentEL.html = '';
+  parentEL.insertAdjacentHTML('afterbegin', markup)
+};
+
+// showRecipe
 const getPokemonsList = async function () {
   try {
-    const res = await fetch(
-      'https://pokeapi.co/api/v2/pokemon/1/'
-    );
+    renderSpinner(recipeContainer)
+
+    const res = await fetch('https://pokeapi.co/api/v2/pokemon/1/');
     const data = await res.json();
     console.log(data);
 
@@ -25,7 +43,9 @@ const getPokemonsList = async function () {
     // Render pokemon
     const markup = `
     <figure class="recipe__fig_${data.types[0].type.name}">
-    <img src="${data.sprites.front_default}" alt="${data.name}" class="recipe__img" />
+    <img src="${data.sprites.front_default}" alt="${
+      data.name
+    }" class="recipe__img" />
     <h1 class="recipe__title_${data.types[0].type.name}">
       <span>${data.name}</span>
     </h1>
@@ -37,14 +57,18 @@ const getPokemonsList = async function () {
         <use href="src/img/icons.svg#icon-clock"></use>
       </svg>
       <span class="recipe__info-text">Type: &nbsp;</span>
-      <span class="recipe__info-data recipe__info-data--minutes">${data.types[0].type.name}</span>
+      <span class="recipe__info-data recipe__info-data--minutes">${
+        data.types[0].type.name
+      }</span>
     </div>
     <div class="recipe__info">
       <svg class="recipe__info-icon">
         <use href="src/img/icons.svg#icon-users"></use>
       </svg>
       <span class="recipe__info-text">Available Moves:&nbsp; </span>
-      <span class="recipe__info-data recipe__info-data--people">${data.moves.length}</span>
+      <span class="recipe__info-data recipe__info-data--people">${
+        data.moves.length
+      }</span>
       
 
       <div class="recipe__info-buttons">
@@ -74,38 +98,32 @@ const getPokemonsList = async function () {
   </div>
 
   <div class="recipe__ingredients">
-    <h2 class="heading--2">Recipe ingredients</h2>
+    <h2 class="heading--2">Games Appearance</h2>
     <ul class="recipe__ingredient-list">
-    
+    ${data.game_indices
+      .map(game => {
+        return `
       <li class="recipe__ingredient">
-        <svg class="recipe__icon">
-          <use href="src/img/icons.svg#icon-check"></use>
-        </svg>
-        <div class="recipe__quantity">1000</div>
-        <div class="recipe__description">
-          <span class="recipe__unit">g</span>
-          pasta
-        </div>
+      <svg class="recipe__icon">
+        <use href="src/img/icons.svg#icon-check"></use>
+      </svg>
+      <div class="recipe__quantity">${game.version.name}</div>
+      <div class="recipe__description">
+        <span class="recipe__unit"></span>
+      </div>
       </li>
-
-      <li class="recipe__ingredient">
-        <svg class="recipe__icon">
-          <use href="src/img/icons.svg#icon-check"></use>
-        </svg>
-        <div class="recipe__quantity">0.5</div>
-        <div class="recipe__description">
-          <span class="recipe__unit">cup</span>
-          ricotta cheese
-        </div>
-      </li>
-    </ul>
-  </div>
+      `;
+      })
+      .join('')}
+    </div>
 
   <div class="recipe__directions">
     <h2 class="heading--2">How to cook it</h2>
     <p class="recipe__directions-text">
       This recipe was carefully designed and tested by
-      <span class="recipe__publisher">Appears in ${data.game_indices.length} games</span>. Please check out
+      <span class="recipe__publisher">Appears in ${
+        data.game_indices.length
+      } games</span>. Please check out
       directions at their website.
     </p>
     <a
@@ -121,7 +139,7 @@ const getPokemonsList = async function () {
   </div>
     `;
     recipeContainer.innerHTML = '';
-    recipeContainer.insertAdjacentHTML('afterbegin', markup)
+    recipeContainer.insertAdjacentHTML('afterbegin', markup);
   } catch (error) {
     console.log(error);
   }
