@@ -30,11 +30,14 @@ const renderSpinner = function (parentEL) {
 };
 
 // showRecipe
-const getPokemonsList = async function () {
+const renderPokemonDetails = async function () {
   try {
+    const id = window.location.hash.slice(1)
+    if(!id) return;
+
     renderSpinner(recipeContainer)
 
-    const res = await fetch('https://pokeapi.co/api/v2/pokemon/1/');
+    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
     const data = await res.json();
     console.log(data);
 
@@ -145,4 +148,6 @@ const getPokemonsList = async function () {
   }
 };
 
-getPokemonsList();
+['hashchange', 'load'].forEach(e => window.addEventListener(e,renderPokemonDetails))
+// window.addEventListener('hashchange', renderPokemonDetails)
+// window.addEventListener('load', renderPokemonDetails)
