@@ -8,13 +8,6 @@ import 'regenerator-runtime/runtime';
 
 const recipeContainer = document.querySelector('.recipe');
 
-const timeout = function (s) {
-  return new Promise(function (_, reject) {
-    setTimeout(function () {
-      reject(new Error(`Request took too long! Timeout after ${s} second`));
-    }, s * 1000);
-  });
-};
 
 // https://forkify-api.herokuapp.com/v2
 
@@ -35,13 +28,13 @@ const renderPokemonDetails = async function () {
 
     // 2) Render pokemon
     pokemonView.render(model.state.recipe);
-    
-
   } catch (error) {
-    console.log(error);
+    pokemonView.renderError()
   }
 };
 
-['hashchange', 'load'].forEach(e => window.addEventListener(e,renderPokemonDetails))
-// window.addEventListener('hashchange', renderPokemonDetails)
-// window.addEventListener('load', renderPokemonDetails)
+const init = function() {
+pokemonView.addHandlerRender(renderPokemonDetails)
+}
+
+init();

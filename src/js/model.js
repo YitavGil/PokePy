@@ -1,22 +1,30 @@
 import { async } from "regenerator-runtime";
+import {API_URL} from './config';
+import { getJSON } from "./helpers";
+
 export const state = {
     recipe: {},
 }
 
 export const loadPokemon = async function(id) {
     try {
-        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
-        const data = await res.json();
-        
-
-        if (!res.ok) throw new Error(`Bad request`);
+        const data = await getJSON(`${API_URL}/${id}/`);
 
         const { pokemon } = data;
         state.recipe = data
     } catch (error) {
-        alert(error)
+        throw error
     }
- 
+};
 
-   
+export const loadSearchResults = async function(query) {
+    try {
+        const data = await getJSON(`${API_URL}/${query}`)
+        console.log(data);
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
 }
+
+loadSearchResults("squirtle")

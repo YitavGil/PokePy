@@ -4,11 +4,13 @@ import icons from 'url:../../img/icons.svg';
 export class PokemonView {
   #parentElement = document.querySelector('.recipe');
   #data;
+  #errorMessage = 'Pokemon Not Found!';
+  #message = '';
 
   render(data) {
     this.#data = data;
     const markup = this.#generateMarkup();
-    this.#clear()
+    this.#clear();
     this.#parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
@@ -16,17 +18,51 @@ export class PokemonView {
     this.#parentElement.innerHTML = '';
   }
 
-  renderSpinner = function () {
+  renderSpinner() {
     const markup = `
     <div class="spinner">
     <svg>
       <use href="${icons}#icon-loader"></use>
     </svg>
   </div>
-    `
-    this.#parentElement.html = '';
-    this.#parentElement.insertAdjacentHTML('afterbegin', markup)
-  };
+    `;
+    this.#clear();
+    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+  }
+
+  addHandlerRender(handler) {
+    ['hashchange', 'load'].forEach(e => window.addEventListener(e, handler));
+  }
+
+  renderError(message = this.#errorMessage) {
+    const markup = `
+        <div class="error">
+            <div>
+            <svg>
+                <use href="${icons}#icon-alert-triangle"></use>
+            </svg>
+            </div>
+            <p>${message}</p>
+    </div>
+    `;
+    this.#clear();
+    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+  }
+
+  renderMessage(message = this.#message) {
+    const markup = `
+        <div class="message">
+            <div>
+            <svg>
+                <use href="${icons}#icon-smile"></use>
+            </svg>
+            </div>
+            <p>${message}</p>
+    </div>
+    `;
+    this.#clear();
+    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+  }
 
   #generateMarkup() {
     return `
@@ -126,7 +162,6 @@ export class PokemonView {
     </a>
   </div>
     `;
-  
   }
 }
 
