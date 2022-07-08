@@ -1,18 +1,11 @@
 import * as model from './model';
 import pokemonView from './views/pokemonView';
+import searchView from './views/searchView';
 
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-
-
-const recipeContainer = document.querySelector('.recipe');
-
-
-// https://forkify-api.herokuapp.com/v2
-
-///////////////////////////////////////
-
+import { async } from 'regenerator-runtime';
 
 
 // showRecipe
@@ -33,8 +26,22 @@ const renderPokemonDetails = async function () {
   }
 };
 
+// Searching a pokemon
+const controlSearchResults = async function() {
+  try {
+    const query = searchView.getQuery();
+    if(!query) return;
+
+   await model.loadSearchResults(query);
+   console.log('hope', model.state.search.results);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const init = function() {
-pokemonView.addHandlerRender(renderPokemonDetails)
+pokemonView.addHandlerRender(renderPokemonDetails);
+searchView.addHandlerSearch(controlSearchResults);
 }
 
 init();

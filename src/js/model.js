@@ -4,6 +4,10 @@ import { getJSON } from "./helpers";
 
 export const state = {
     recipe: {},
+    search: {
+        query: "",
+        results: []
+    },
 }
 
 export const loadPokemon = async function(id) {
@@ -19,12 +23,15 @@ export const loadPokemon = async function(id) {
 
 export const loadSearchResults = async function(query) {
     try {
+        state.search.query = query;
+
         const data = await getJSON(`${API_URL}/${query}`)
-        console.log(data);
+
+      state.search.results = data
     } catch (error) {
         console.log(error);
         throw error
     }
 }
 
-loadSearchResults("squirtle")
+loadSearchResults("charmander")
