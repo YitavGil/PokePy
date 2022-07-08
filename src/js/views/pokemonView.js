@@ -1,40 +1,20 @@
+import View from './view';
 // import grass from 'url:../img/grass.png';
 import icons from 'url:../../img/icons.svg';
 
-export class PokemonView {
-  #parentElement = document.querySelector('.recipe');
-  #data;
-  #errorMessage = 'Pokemon Not Found!';
-  #message = '';
+export class PokemonView extends View {
+  _parentElement = document.querySelector('.recipe');
+  
+  _errorMessage = 'Pokemon Not Found!';
+  _message = '';
 
-  render(data) {
-    this.#data = data;
-    const markup = this.#generateMarkup();
-    this.#clear();
-    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
-  }
-
-  #clear() {
-    this.#parentElement.innerHTML = '';
-  }
-
-  renderSpinner() {
-    const markup = `
-    <div class="spinner">
-    <svg>
-      <use href="${icons}#icon-loader"></use>
-    </svg>
-  </div>
-    `;
-    this.#clear();
-    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
-  }
+  
 
   addHandlerRender(handler) {
     ['hashchange', 'load'].forEach(e => window.addEventListener(e, handler));
   }
 
-  renderError(message = this.#errorMessage) {
+  renderError(message = this._errorMessage) {
     const markup = `
         <div class="error">
             <div>
@@ -45,33 +25,19 @@ export class PokemonView {
             <p>${message}</p>
     </div>
     `;
-    this.#clear();
-    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+    this._clear();
+    this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
-  renderMessage(message = this.#message) {
-    const markup = `
-        <div class="message">
-            <div>
-            <svg>
-                <use href="${icons}#icon-smile"></use>
-            </svg>
-            </div>
-            <p>${message}</p>
-    </div>
-    `;
-    this.#clear();
-    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
-  }
-
-  #generateMarkup() {
+  
+  _generateMarkup() {
     return `
-    <figure class="recipe__fig_${this.#data.types[0].type.name}">
-    <img src="${this.#data.sprites.front_default}" alt="${
-      this.#data.name
+    <figure class="recipe__fig_${this._data.types[0].type.name}">
+    <img src="${this._data.sprites.front_default}" alt="${
+      this._data.name
     }" class="recipe__img" />
-    <h1 class="recipe__title_${this.#data.types[0].type.name}">
-      <span>${this.#data.name}</span>
+    <h1 class="recipe__title_${this._data.types[0].type.name}">
+      <span>${this._data.name}</span>
     </h1>
   </figure>
 
@@ -82,7 +48,7 @@ export class PokemonView {
       </svg>
       <span class="recipe__info-text">Type: &nbsp;</span>
       <span class="recipe__info-data recipe__info-data--minutes">${
-        this.#data.types[0].type.name
+        this._data.types[0].type.name
       }</span>
     </div>
     <div class="recipe__info">
@@ -91,7 +57,7 @@ export class PokemonView {
       </svg>
       <span class="recipe__info-text">Available Moves:&nbsp; </span>
       <span class="recipe__info-data recipe__info-data--people">${
-        this.#data.moves.length
+        this._data.moves.length
       }</span>
       
 
@@ -124,7 +90,7 @@ export class PokemonView {
   <div class="recipe__ingredients">
     <h2 class="heading--2">Games Appearance</h2>
     <ul class="recipe__ingredient-list">
-    ${this.#data.game_indices
+    ${this._data.game_indices
       .map(game => {
         return `
       <li class="recipe__ingredient">
@@ -146,7 +112,7 @@ export class PokemonView {
     <p class="recipe__directions-text">
       This recipe was carefully designed and tested by
       <span class="recipe__publisher">Appears in ${
-        this.#data.game_indices.length
+        this._data.game_indices.length
       } games</span>. Please check out
       directions at their website.
     </p>

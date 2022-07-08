@@ -3,11 +3,23 @@ import {API_URL} from './config';
 import { getJSON } from "./helpers";
 
 export const state = {
+    pokemon: {},
     recipe: {},
     search: {
         query: "",
         results: []
     },
+}
+
+export const getAllPokemon = async function () {
+    try {
+        const data = await getJSON(`${API_URL}/`);
+        state.pokemon = data;
+      
+    } catch (error) {
+        console.log(error);
+        console.log('error in get all');
+    }
 }
 
 export const loadPokemon = async function(id) {
@@ -34,4 +46,4 @@ export const loadSearchResults = async function(query) {
     }
 }
 
-loadSearchResults("charmander")
+getAllPokemon()
